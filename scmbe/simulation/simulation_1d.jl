@@ -17,11 +17,18 @@ function run_1d_simulation(d_vec, t_vec, z_vec, input_field, alpha)
     atom_cache = @views RK4Cache(atomic_state[:, :, 1])
 
     #-------------------------------------
+    #field at z[1] complete so we do polarisation too to make it even
     @views compute_polarisation_column!(polarisation[:], atomic_state, rabi_frequency[:, 1], unrotate_sigma_grid, t_vec, rotate_sigma, atom_cache)
 
-    @inbounds for j in 2:length(z_vec)
+    #first step of ab2 has to be an euler step, so might as well do it outside
+    @views field_euler_step!(rabi_frequency[:, 2], rabi_frequency[:, 1], dz, alpha, polarisation, 1.0, field_cache)
 
-        @views ab2_step!(field_2d!, rabi_frequency[:, j], rabi_frequency[:, j-1], z_vec, dz, (alpha, polarisation, 1.0), field_cache)
+    #evening things out again
+    @views compute_polarisation_column!(polarisation, atomic_state, rabi_frequency[:, 2], unrotate_sigma_grid, t_vec, rotate_sigma, atom_cache)
+
+    @inbounds for j in 3:length(z_vec)
+
+        @views field_ab2_step!(rabi_frequency[:, j], rabi_frequency[:, j-1], dz, alpha, polarisation, 1.0, field_cache)
 
         @views compute_polarisation_column!(polarisation, atomic_state, rabi_frequency[:, j], unrotate_sigma_grid, t_vec, rotate_sigma, atom_cache)
 
