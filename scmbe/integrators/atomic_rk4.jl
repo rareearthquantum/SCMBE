@@ -19,16 +19,16 @@ RK4Cache(u) = RK4Cache(similar(u), similar(u), similar(u), similar(u), similar(u
 #------------------------
 
 """
-    rk4_custom_step!(uf, ui, index, dts, p, cache::RK4Cache)
+    rk4_custom_step!(uf, ui, index, prealloc_dt, p, cache::RK4Cache)
 
 Advance a detuning-by-component atomic state from `ui` into `uf` using
 RK4. Component 1 is coherence and component 2 is inversion.
-`dts = (dt, dt/2, dt/6)` and `p = (rabi_frequency, rotate)`, where the field
+`prealloc_dt = (dt, dt/2, dt/6)` and `p = (rabi_frequency, rotate)`, where the field
 is sampled on the time grid and `rotate` on its interleaved half steps.
 `index` selects the starting time sample. Mutates `uf` and `cache`;
 returns `nothing`.
 """
-function rk4_custom_step!(uf, ui, index, dts, p, cache::RK4Cache)
+function rk4_custom_step!(uf, ui, index, prealloc_dt, p, cache::RK4Cache)
     k1, k2, k3, k4 = cache.k1, cache.k2, cache.k3, cache.k4
     temp = cache.temp
 
@@ -40,21 +40,21 @@ function rk4_custom_step!(uf, ui, index, dts, p, cache::RK4Cache)
         @. k1[:, 1] = -0.5im * rabi_frequency[index] * ui[:, 2] * rotate[:, 2index-1]
         @. k1[:, 2] = 2imag(conj(rabi_frequency[index]) * ui[:, 1] * conj(rotate[:, 2index-1]))
 
-        @. temp = ui + dts[2] * k1
+        @. temp = ui + prealloc_dt[2] * k1
         @. k2[:, 1] = -0.5im * midpoint_rabi_frequency * temp[:, 2] * rotate[:, 2index]
         @. k2[:, 2] = 2imag(conj(midpoint_rabi_frequency) * temp[:, 1] * conj(rotate[:, 2index]))
 
-        @. temp = ui + dts[2] * k2
+        @. temp = ui + prealloc_dt[2] * k2
         @. k3[:, 1] = -0.5im * midpoint_rabi_frequency * temp[:, 2] * rotate[:, 2index]
         @. k3[:, 2] = 2imag(conj(midpoint_rabi_frequency) * temp[:, 1] * conj(rotate[:, 2index]))
 
-        @. temp = ui + dts[1] * k3
+        @. temp = ui + prealloc_dt[1] * k3
         @. k4[:, 1] = -0.5im * rabi_frequency[index+1] * temp[:, 2] * rotate[:, 2index+1]
         @. k4[:, 2] = 2imag(conj(rabi_frequency[index+1]) * temp[:, 1] * conj(rotate[:, 2index+1]))
 
     end
 
-    @. uf = ui + dts[3]*(k1 + 2k2 + 2k3 + k4)
+    @. uf = ui + prealloc_dt[3]*(k1 + 2k2 + 2k3 + k4)
 
     return nothing
 end
@@ -70,10 +70,10 @@ time slice, using the uniform range `t_vec` and reusable RK4 `cache`.
 function rk4_custom!(u, t_vec, p, cache)
 
     dt = step(t_vec)
-    dts = (dt, dt/2, dt/6)
+    prealloc_dt = (dt, dt/2, dt/6)
 
     @inbounds for i in 1:(length(t_vec)-1)
-        @views rk4_custom_step!(u[:, :, i+1], u[:, :, i], i, dts, p, cache)
+        @views rk4_custom_step!(u[:, :, i+1], u[:, :, i], i, prealloc_dt, p, cache)
     end
 
     return nothing

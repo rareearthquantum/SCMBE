@@ -17,4 +17,6 @@ function compute_field_spectrum!(f!, polarisation_spectrum, polarisation, rabi_f
         rabi_frequency[i, z_index, :] .*= inverse_diffrac_rotate
     end
     @views ifft!(rabi_frequency[:, z_index, :], 2)
+
+    return nothing
 end
