@@ -1,35 +1,45 @@
-using Plots, JLD2
+using SCMBE, Plots, JLD2
 
-include("../scmbe/main_include.jl")
+# Simulation code is identical to weak_pulse_example.jl
 
-#make grids
 d_vec = LinRange(-50, 50, 100)
-t_vec = LinRange(0,1,128)
-z_vec = LinRange(0,1,64)
+t_vec = LinRange(0, 1, 128)
+z_vec = LinRange(0, 1, 64)
 
-#make input field
 t0 = t_vec[end÷2]
 A = 0.1
 w = 0.1
 input_field = @. A*exp(-(1/w)*(t_vec-t0)^2)
 
-#param
 alpha = 50
 
-#run sim
-output_field = run_1d_simulation(d_vec,t_vec,z_vec,input_field,alpha)
+output_field = run_1d_simulation(d_vec, t_vec, z_vec, input_field, alpha)
 
-#then we can save the actual data itself in a jld2 file
-jldsave("../data/examples/jld2/saving_example.jld2"; rabi_frequency=output_field)
+#=
+Make sure when saving that you know exactly where you are saving to and from
+
+Use @__DIR__ to get the directory that the file running the command is in, for this example it would be "DriveLetter:/blah/blahblah/SCMBE/examples/"
+Use pwd() to get the path julia was launched from, jldsave and savefig use that internally
+Use pkgdir(SCMBE) for the root directory of the package (careful)
+
+@__DIR__ is the most useful at the moment
+=#
+plot_dir = joinpath(@__DIR__, "plots")
+data_dir = joinpath(@__DIR__, "data")
+
+
+# Then we can save the actual data itself in a jld2 file
+mkpath(data_dir) #make sure path exists by creating it
+jldsave(joinpath(data_dir, "saving_example.jld2"); rabi_frequency=output_field)
 output_field = nothing #remove all previous data just for demonstrative purposes
 
-#then load it
-rabi_frequency = load("../data/examples/jld2/saving_example.jld2", "rabi_frequency")
+# Then load it
+rabi_frequency = load(joinpath(data_dir, "saving_example.jld2"), "rabi_frequency")
 
-#make plot with the loaded data
-fig = heatmap(t_vec,z_vec,transpose(abs2.(rabi_frequency)))
+# Make plot with the loaded data
+fig = heatmap(t_vec, z_vec, transpose(abs2.(rabi_frequency)))
 
-#saving fig, make sure the path exists by making it and then save the fig
-mkpath("../data/examples/")
-savefig(fig, "../data/examples/plots/saving_example.png") #regular png
-savefig(fig, "../data/examples/plots/saving_example.pdf") #can also do pdf for putting in latex since its vector graphics
+# Saving fig, make sure the path exists by making it and then save the fig
+mkpath(plot_dir)
+savefig(fig, joinpath(plot_dir, "plots/saving_example.png")) #regular png
+savefig(fig, joinpath(plot_dir, "plots/saving_example.pdf")) #can also do pdf for putting in latex since its vector graphics

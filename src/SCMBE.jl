@@ -1,17 +1,8 @@
 module SCMBE
 
-"""
-    hello(who::String)
+include("integrators/integrators_include.jl")
+include("simulation/simulation_include.jl")
 
-Return "Hello, `who`".
-"""
-hello(who::String) = "Hello, $who"
-
-"""
-    domath(x::Number)
-
-Return `x + 5`.
-"""
-domath(x::Number) = x + 5
+export run_0d_simulation, run_1d_simulation, run_2d_simulation
 
 end # module SCMBE

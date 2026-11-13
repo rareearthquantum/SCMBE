@@ -1,6 +1,4 @@
-using Plots
-
-include("../scmbe/main_include.jl")
+using SCMBE, Plots
 
 #make grids
 d_vec = LinRange(-50, 50, 100)
