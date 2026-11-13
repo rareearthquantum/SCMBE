@@ -21,7 +21,7 @@ which enters the Pkg mode, then enter
 ```
 instantiate
 ```
-to download all the necessary dependencies.
+to download all the necessary dependencies as dictated by the included `Project.toml` file.
 
 To exit the Julia REPL, use `CTRL+D`.
 
