@@ -47,7 +47,7 @@ savefig(fig, joinpath(plot_dir, "saving_example.pdf")) #can also do pdf for putt
 
 
 #just cleanup, normally you don't need this since you want to keep your files
-println("Please view your saved files before they are removed. Press Enter to exit and remove your saved files...")
+println("Please view your saved files before they are removed.\nPress Enter to exit and remove your saved files...")
 readline()
 rm(data_dir, force=true, recursive=true)
 rm(plot_dir, force=true, recursive=true)
