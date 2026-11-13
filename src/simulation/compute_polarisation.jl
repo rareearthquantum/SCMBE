@@ -11,7 +11,7 @@ function compute_polarisation_column!(polarisation_column, atomic_state, rabi_fr
         for d in axes(atomic_state, 1)
             value += atomic_state[d, 1, j] * unrotate_sigma_grid[d, j]
         end
-        polarisation_column[j] = value / size(atomic_state, 1)
+        polarisation_column[j] = value / size(atomic_state, 1) #note that this polarisation isn't the actual polarisation density
     end
 
     return nothing
