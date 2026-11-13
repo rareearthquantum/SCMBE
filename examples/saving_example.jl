@@ -37,9 +37,17 @@ output_field = nothing #remove all previous data just for demonstrative purposes
 rabi_frequency = load(joinpath(data_dir, "saving_example.jld2"), "rabi_frequency")
 
 # Make plot with the loaded data
+ENV["GKSwstype"] = "100" #turns off the plot popup, useful for cluster
 fig = heatmap(t_vec, z_vec, transpose(abs2.(rabi_frequency)))
 
 # Saving fig, make sure the path exists by making it and then save the fig
 mkpath(plot_dir)
 savefig(fig, joinpath(plot_dir, "saving_example.png")) #regular png
 savefig(fig, joinpath(plot_dir, "saving_example.pdf")) #can also do pdf for putting in latex since its vector graphics
+
+
+#just cleanup, normally you don't need this since you want to keep your files
+println("Please view your saved files before they are removed. Press Enter to exit and remove your saved files...")
+readline()
+rm(data_dir, force=true, recursive=true)
+rm(plot_dir, force=true, recursive=true)

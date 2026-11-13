@@ -6,28 +6,8 @@ mutable struct RK4Cache{T}
     temp::T
 end
 
-"""
-    RK4Cache(u)
-
-Allocate four stage buffers and one temporary buffer matching the shape
-and element type of `u`, for reuse by the atomic RK4 integrator.
-"""
 RK4Cache(u) = RK4Cache(similar(u), similar(u), similar(u), similar(u), similar(u))
 
-
-
-#------------------------
-
-"""
-    rk4_custom_step!(uf, ui, index, prealloc_dt, p, cache::RK4Cache)
-
-Advance a detuning-by-component atomic state from `ui` into `uf` using
-RK4. Component 1 is coherence and component 2 is inversion.
-`prealloc_dt = (dt, dt/2, dt/6)` and `p = (rabi_frequency, rotate)`, where the field
-is sampled on the time grid and `rotate` on its interleaved half steps.
-`index` selects the starting time sample. Mutates `uf` and `cache`;
-returns `nothing`.
-"""
 function rk4_custom_step!(uf, ui, index, prealloc_dt, p, cache::RK4Cache)
     k1, k2, k3, k4 = cache.k1, cache.k2, cache.k3, cache.k4
     temp = cache.temp
@@ -59,14 +39,6 @@ function rk4_custom_step!(uf, ui, index, prealloc_dt, p, cache::RK4Cache)
     return nothing
 end
 
-"""
-    rk4_custom!(u, t_vec, p, cache)
-
-Fill the atomic trajectory `u[detuning, component, time]` after its first
-time slice, using the uniform range `t_vec` and reusable RK4 `cache`.
-`p` contains the time-sampled field and half-step rotation grid as in
-[`rk4_custom_step!`](@ref). Returns `nothing`.
-"""
 function rk4_custom!(u, t_vec, p, cache)
 
     dt = step(t_vec)

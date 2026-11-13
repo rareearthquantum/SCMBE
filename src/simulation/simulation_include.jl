@@ -1,4 +1,3 @@
-# Numerical grids, atomic response, and field propagation.
 include("compute_polarisation.jl")
 include("compute_field_spectrum.jl")
 include("simulation_2d.jl")

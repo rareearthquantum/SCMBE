@@ -1,14 +1,4 @@
-"""
-    compute_polarisation_column!( polarisation_column, atomic_state, rabi_frequency_column, unrotate_sigma_grid, t_vec, rotate_sigma, cache)
 
-Compute one transverse column of the ensemble-averaged coherence.
-Reset `atomic_state[detuning, component, time]` to zero initial coherence
-and inversion -1, integrate under `rabi_frequency_column`, undo detuning
-rotation, and average equally over detunings into `polarisation_column`.
-`unrotate_sigma_grid` has shape `(Nd, Nt)` and `rotate_sigma` contains
-interleaved full- and half-time-step phases. Mutates the output column,
-atomic trajectory, and RK4 cache; returns `nothing`.
-"""
 function compute_polarisation_column!(polarisation_column, atomic_state, rabi_frequency_column, unrotate_sigma_grid, t_vec, rotate_sigma, cache)
     fill!(polarisation_column, 0)
 
