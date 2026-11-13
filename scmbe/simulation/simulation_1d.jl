@@ -1,3 +1,8 @@
+"""
+    run_1d_simulation(d_vec, t_vec, z_vec, input_field, alpha)
+
+blah blah blah
+"""
 function run_1d_simulation(d_vec, t_vec, z_vec, input_field, alpha)
 
     dz = step(z_vec)
