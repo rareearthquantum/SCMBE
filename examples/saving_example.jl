@@ -41,5 +41,5 @@ fig = heatmap(t_vec, z_vec, transpose(abs2.(rabi_frequency)))
 
 # Saving fig, make sure the path exists by making it and then save the fig
 mkpath(plot_dir)
-savefig(fig, joinpath(plot_dir, "plots/saving_example.png")) #regular png
-savefig(fig, joinpath(plot_dir, "plots/saving_example.pdf")) #can also do pdf for putting in latex since its vector graphics
+savefig(fig, joinpath(plot_dir, "saving_example.png")) #regular png
+savefig(fig, joinpath(plot_dir, "saving_example.pdf")) #can also do pdf for putting in latex since its vector graphics
