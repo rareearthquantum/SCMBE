@@ -19,7 +19,6 @@ beta = 0.05
 
 #run sim
 output_field = @time run_2d_simulation(d_vec, t_vec, z_vec, y_vec, input_field, alpha, beta)
-#cant plot the complex numb, so plot intensity
 output_intensity = abs2.(output_field[end÷2, :, :])
 
 #make and display plot

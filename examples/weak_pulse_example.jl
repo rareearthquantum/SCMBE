@@ -16,8 +16,7 @@ alpha = 50
 
 #run sim
 output_field = run_1d_simulation(d_vec,t_vec,z_vec,input_field,alpha)
-#cant plot the complex numb, so plot intensity
-output_intensity = abs2.(output_field)
+output_intensity = abs2.(output_field) #cant plot complex numbers directly, so plot intensity
 
 #display plot
 fig = heatmap(t_vec,z_vec,transpose(output_intensity))

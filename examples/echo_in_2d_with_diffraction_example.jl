@@ -35,7 +35,6 @@ beta = 0
 
 #run sim
 output_field = @time run_2d_simulation(d_vec, t_vec, z_vec, y_vec, input_field, alpha, beta)
-#cant plot the complex numb, so plot intensity
 output_intensity = abs2.(output_field)
 intensity_summed_over_y = dropdims(sum(output_intensity; dims=3); dims=3)
 
