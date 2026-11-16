@@ -38,6 +38,7 @@ Use one of the "run simulation" functions to get the output field
 Note that in the 0d case, the polarisation and atomic_states will be outputted instead
 =#
 output_field = run_2d_simulation(d_vec,t_vec,z_vec,y_vec,input_field,alpha,beta)
+#use @time like in some of the other examples to also output the time taken to run
 
 #-PROCESS OUTPUT------------------------------------------------------------------------------------------------------------------------------------------------
 

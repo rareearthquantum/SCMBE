@@ -12,10 +12,10 @@ function run_cylindrical_simulation(d_vec, t_vec, z_vec, q, input_field, alpha, 
     polarisation = zeros(ComplexF64, length(t_vec), length(q.r))
     polarisation_spectrum = similar(polarisation)
 
-    unrotate_sigma_grid = [cis(-detuning * t) for detuning in d_vec, t in t_vec]
+    unrotate_sigma_grid = cis.(-d_vec * transpose(t_vec))
     rotate_sigma = make_rotate_sigma(d_vec, t_vec)
 
-    diffrac_rotate = @. cis(beta * q.k^2 * dz)
+    diffrac_rotate = cis.(z_vec * beta.*transpose(q.k).^2)
     inverse_diffrac_rotate = conj.(diffrac_rotate)
 
     field_caches = [@views AB2Cache(rabi_frequency[:, 1, l]) for l in eachindex(q.r)]
@@ -39,7 +39,7 @@ function run_cylindrical_simulation(d_vec, t_vec, z_vec, q, input_field, alpha, 
     #has to start at 3
     @inbounds for j in 3:length(z_vec)
 
-        compute_field_spectrum!(field_ab2_step!, q, polarisation_spectrum, polarisation, rabi_frequency_spectrum, rabi_frequency, j,
+        compute_radial_field_spectrum!(field_ab2_step!, q, polarisation_spectrum, polarisation, rabi_frequency_spectrum, rabi_frequency, j,
             alpha, diffrac_rotate, inverse_diffrac_rotate, field_caches, dz)
 
         for l in eachindex(q.r)

@@ -18,7 +18,7 @@ alpha = 0
 beta = 0.05
 
 #run sim
-output_field = run_cylindrical_simulation(d_vec, t_vec, z_vec, q, input_field, alpha, beta)
+output_field = @time run_cylindrical_simulation(d_vec, t_vec, z_vec, q, input_field, alpha, beta)
 #cant plot the complex numb, so plot intensity
 output_intensity = abs2.(output_field[end÷2, :, :])
 
