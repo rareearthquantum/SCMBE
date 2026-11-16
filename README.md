@@ -13,17 +13,16 @@ git clone https://github.com/rareearthquantum/SCMBE.git
 cd SCMBE
 julia --project=.
 ```
-then within the Julia REPL enter in
+Then within the just opened Julia REPL, enter Pkg mode by typing
 ```
 ]
 ```
-which enters the Pkg mode, then enter
+Then download all the necessary dependencies by typing
 ```
 instantiate
 ```
-to download all the necessary dependencies as dictated by the included `Project.toml` file.
 
-To exit the Julia REPL, use `CTRL+D`.
+Exit the Julia REPL using `CTRL+D`.
 
 ## Step 3: Running an Example Script
 
