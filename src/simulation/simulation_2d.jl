@@ -12,11 +12,11 @@ function run_2d_simulation(d_vec, t_vec, z_vec, y_vec, input_field, alpha, beta)
     polarisation = zeros(ComplexF64, length(t_vec), length(y_vec))
     polarisation_spectrum = similar(polarisation)
 
-    unrotate_sigma_grid = [cis(-detuning * t) for detuning in d_vec, t in t_vec]
+    unrotate_sigma_grid = cis.(-d_vec * transpose(t_vec))
     rotate_sigma = make_rotate_sigma(d_vec, t_vec)
 
     ky_grid = 2pi .* fftfreq(length(y_vec), 1/step(y_vec))
-    diffrac_rotate = @. cis(beta*ky_grid^2*dz)
+    diffrac_rotate = cis.(z_vec * beta.*transpose(ky_grid).^2)
     inverse_diffrac_rotate = conj.(diffrac_rotate)
 
     field_caches = [@views AB2Cache(rabi_frequency[:, 1, l]) for l in eachindex(y_vec)]
@@ -34,7 +34,7 @@ function run_2d_simulation(d_vec, t_vec, z_vec, y_vec, input_field, alpha, beta)
 
     #evening things out again
     for l in eachindex(y_vec)
-        @views compute_polarisation_column!(polarisation[:, l], atomic_state, rabi_frequency[:, 1, l], unrotate_sigma_grid, t_vec, rotate_sigma, atom_cache)
+        @views compute_polarisation_column!(polarisation[:, l], atomic_state, rabi_frequency[:, 2, l], unrotate_sigma_grid, t_vec, rotate_sigma, atom_cache)
     end
 
     #has to start at 3

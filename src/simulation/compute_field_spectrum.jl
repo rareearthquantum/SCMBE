@@ -9,12 +9,12 @@ function compute_field_spectrum!(f!, polarisation_spectrum, polarisation, rabi_f
             rabi_frequency[:, z_index, l],
             rabi_frequency_spectrum[:, l],
             dz,
-            alpha, polarisation_spectrum[:, l], diffrac_rotate[l],
+            alpha, polarisation_spectrum[:, l], diffrac_rotate[z_index-1,l],
             field_caches[l]
         )
     end
     for i in axes(rabi_frequency, 1)
-        rabi_frequency[i, z_index, :] .*= inverse_diffrac_rotate
+        rabi_frequency[i, z_index, :] .*= inverse_diffrac_rotate[z_index, :]
     end
     @views ifft!(rabi_frequency[:, z_index, :], 2)
 
