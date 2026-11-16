@@ -4,7 +4,7 @@ using SCMBE, Plots, Hankel
 d_vec = LinRange(-50, 50, 100)
 t_vec = LinRange(0, 1, 128)
 z_vec = LinRange(0, 1, 64)
-q = QDHT(1.0, 64)
+q = QDHT(2.0, 128)
 
 #make input field
 t0 = t_vec[end÷2]
@@ -22,7 +22,7 @@ output_field = @time run_cylindrical_simulation(d_vec, t_vec, z_vec, q, input_fi
 output_intensity = abs2.(output_field[end÷2, :, :])
 
 #make and display plot
-fig = heatmap(q.r, z_vec, output_intensity)
+fig = heatmap(q.r, z_vec, output_intensity; c=:viridis)
 display(fig)
 #makes the plot stay up, without this it appears for a couple milliseconds and then vanishes
 println("Press Enter to exit...")
