@@ -1,7 +1,7 @@
 using SCMBE, Plots, Hankel
 
 #make grids
-d_vec = LinRange(-100, 100, 256)
+d_vec = LinRange(-1000, 1000, 256)
 t_vec = LinRange(0, 1, 1024)
 z_vec = LinRange(0, 1, 128)
 q = QDHT(2.0, 128)
@@ -44,7 +44,7 @@ output_intensity = abs2.(output_field)
 intensity_summed_over_r = dropdims(sum(output_intensity; dims=3); dims=3)
 
 #make and display plots
-fig1 = heatmap(t_vec, z_vec, transpose(intensity_summed_over_r); c=:viridis)
+fig1 = heatmap(t_vec, z_vec, transpose(intensity_summed_over_r); c=cgrad(:viridis,scale=:exp)) #watch the log scale
 fig2 = plot(); [plot!(t_vec, intensity_summed_over_r[:, j]; legend=false, c=cgrad(:rainbow, rev=true), line_z=j) for j in floor.(Int, LinRange(1, length(z_vec), 10))];
 fig = plot(fig1, fig2; layout=(1, 2), size=(1600, 600))
 display(fig)
