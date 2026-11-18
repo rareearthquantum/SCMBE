@@ -5,7 +5,7 @@ t_vec = LinRange(0, 1, 1024)
 z_vec = LinRange(0, 1, 128)
 y_vec = LinRange(-1, 1, 64)
 #careful when making detunings
-d_vec = LinRange(-100, 100, 256)
+d_vec = LinRange(-1000, 1000, 256)
 
 
 #make input field
@@ -17,7 +17,7 @@ transverse_profile_unit_max_amplitude = @. exp(-W(w_y)*y_vec^2)
 
 t01 = t_vec[1*end÷10]
 area1 = pi/2
-w1 = t_vec[end]/50
+w1 = t_vec[end]/20
 first_pulse = @. area1 * N(w1) * exp(-W(w1)*(t_vec-t01)^2)
 first_pulse = first_pulse * transpose(transverse_profile_unit_max_amplitude)
 
@@ -30,7 +30,7 @@ second_pulse = second_pulse * transpose(transverse_profile_unit_max_amplitude)
 input_field = first_pulse + second_pulse
 
 #params
-alpha = 500
+alpha = 4000
 beta = 0
 
 #run sim
@@ -39,8 +39,8 @@ output_intensity = abs2.(output_field)
 intensity_summed_over_y = dropdims(sum(output_intensity; dims=3); dims=3)
 
 #make and display plots
-fig1 = heatmap(t_vec, z_vec, transpose(intensity_summed_over_y); c=:viridis)
-fig2 = plot(); [plot!(t_vec, intensity_summed_over_y[:, j]; legend=false, c=cgrad(:rainbow, rev=true), line_z=j) for j in floor.(Int, LinRange(1, length(z_vec), 10))];
+fig1 = heatmap(t_vec, z_vec, transpose(intensity_summed_over_y); c=cgrad(:viridis,scale=:exp)) #watch the log scale
+fig2 = plot(); [plot!(t_vec, intensity_summed_over_y[:, j]; legend=false, c=cgrad(:rainbow, rev=true), line_z=j, cb=false) for j in floor.(Int, LinRange(1, length(z_vec), 10))];
 fig = plot(fig1, fig2; layout=(1, 2), size=(1600, 600))
 display(fig)
 #makes the plot stay up, without this it appears for a couple milliseconds and then vanishes

@@ -1,8 +1,8 @@
 using SCMBE, Plots
 
 #make grids
-d_vec = LinRange(-50, 50, 100)
-t_vec = LinRange(0, 1, 512)
+d_vec = LinRange(-1000, 1000, 256)
+t_vec = LinRange(0, 1, 1024)
 
 #make input field
 W(w) = 1/(2*w^2) #width factor within the exponential
@@ -10,12 +10,12 @@ N(w) = 1/(w*sqrt(2*pi)) #normalises gaussian
 
 t01 = t_vec[2*end÷10]
 area1 = pi/2
-w1 = 0.1
+w1 = t_vec[end]/20
 first_pulse = @. area1*N(w1)*exp(-W(w1)*(t_vec-t01)^2)
 
 t02 = t_vec[5*end÷10]
 area2 = pi
-w2 = 0.01
+w2 = w1/4
 second_pulse = @. area2*N(w2)*exp(-W(w2)*(t_vec-t02)^2)
 
 input_field = first_pulse + second_pulse
