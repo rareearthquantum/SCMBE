@@ -1,11 +1,10 @@
 using SCMBE, Plots
 
 #make grids
+d_vec = LinRange(-1000, 1000, 256)
 t_vec = LinRange(0, 1, 1024)
 z_vec = LinRange(0, 1, 128)
 y_vec = LinRange(-1, 1, 64)
-#careful when making detunings
-d_vec = LinRange(-1000, 1000, 256)
 
 
 #make input field
@@ -39,7 +38,7 @@ output_intensity = abs2.(output_field)
 intensity_summed_over_y = dropdims(sum(output_intensity; dims=3); dims=3)
 
 #make and display plots
-fig1 = heatmap(t_vec, z_vec, transpose(intensity_summed_over_y); c=cgrad(:viridis,scale=:exp)) #watch the log scale
+fig1 = heatmap(t_vec, z_vec, transpose(intensity_summed_over_y); c=cgrad(:viridis,scale=:exp)) #watch the scale
 fig2 = plot(); [plot!(t_vec, intensity_summed_over_y[:, j]; legend=false, c=cgrad(:rainbow, rev=true), line_z=j, cb=false) for j in floor.(Int, LinRange(1, length(z_vec), 10))];
 fig = plot(fig1, fig2; layout=(1, 2), size=(1600, 600))
 display(fig)

@@ -20,15 +20,19 @@ t_vec = LinRange(0,1,128)
 z_vec = LinRange(0,1,64)
 y_vec = LinRange(-1,1,64)
 
+#helper functions for pulses
+W(w) = 1/(2*w^2) #width factor within the exponential
+N(w) = 1/(w*sqrt(2*pi)) #normalises gaussian
+
 # Define the input field to pass in, again check solver inputs
 t0 = t_vec[end÷2]
-A = 0.1
+A = pi/16
 w_t = 0.1
-w_y = 0.1
-input_field = A.*exp.(-(1/w_t).*(t_vec.-t0).^2) * exp.(-(1/w_y).*(transpose(y_vec)).^2)
+w_y = 0.5
+input_field = A .* N(w_t).*exp.(-W(w_t).*(t_vec.-t0).^2) * exp.(-W(w_y).*(transpose(y_vec)).^2)
 
 # Set the alpha and beta params, again depends on scenario
-alpha = 1
+alpha = 100
 beta = 0.05
 
 #-SOLVE------------------------------------------------------------------------------------------------------------------------------------------------
@@ -37,8 +41,8 @@ beta = 0.05
 Use one of the "run simulation" functions to get the output field
 Note that in the 0d case, the polarisation and atomic_states will be outputted instead
 =#
-output_field = run_2d_simulation(d_vec,t_vec,z_vec,y_vec,input_field,alpha,beta)
-#use @time like in some of the other examples to also output the time taken to run
+output_field = @time run_2d_simulation(d_vec,t_vec,z_vec,y_vec,input_field,alpha,beta)
+#use @time to also print the time taken to run
 
 #-PROCESS OUTPUT------------------------------------------------------------------------------------------------------------------------------------------------
 

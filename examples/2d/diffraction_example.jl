@@ -7,11 +7,14 @@ z_vec = LinRange(0, 1, 128)
 y_vec = LinRange(-1, 1, 256)
 
 #make input field
+W(w) = 1/(2*w^2) #width factor within the exponential
+N(w) = 1/(w*sqrt(2*pi)) #normalises gaussian
+
 t0 = t_vec[end÷2]
-A = 0.1
+A = pi/16
 w_t = 0.1
-w_y = 0.1
-input_field = A .* exp.(-(1/w_t).*(t_vec.-t0).^2) * exp.(-(1/w_y).*(transpose(y_vec)).^2)
+w_y = 0.2
+input_field = A.*N(w_t).*exp.(-W(w_t).*(t_vec.-t0).^2) * exp.(-W(w_y).*(transpose(y_vec)).^2)
 
 #params
 alpha = 0
