@@ -1,7 +1,6 @@
 using Hankel
 
 
-
 R = 100.0
 Nr = 128
 q = QDHT(R,Nr)
